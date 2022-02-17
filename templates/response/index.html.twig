@@ -1,0 +1,34 @@
+{% extends 'BackOffice/baseAdmin.html.twig' %}
+
+
+
+{% block body %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Problem</th>
+            <th scope="col">Action</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for response in listResponses %}
+            <tr>
+                <th scope="row">{{ response.id }}</th>
+
+                <td>{{ response.solution }}</td>
+                <td>{% for rec in response.reclamation %}
+                {{ rec.title }}
+                    {% endfor %}
+                </td>
+                <td>
+                    <a class="btn btn-danger" href="{{ path('delete_response',{'id':response.id}) }}">Delete</a>
+                    <a class="btn btn-warning" href="{{ path('update_response',{'id':response.id}) }}">Modify</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

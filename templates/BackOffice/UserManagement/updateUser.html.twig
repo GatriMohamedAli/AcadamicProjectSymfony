@@ -1,0 +1,52 @@
+{% extends 'BackOffice/baseAdmin.html.twig' %}
+
+{% block body %}
+
+    {{ form_start(form) }}
+    <div class="form-group">
+        <label>Username</label>
+        {{ form_widget(form.username,{'attr': {'placeholder':'Username','class':'form-control'}}) }}
+
+    </div>
+
+    <div class="alert alert-danger" role="alert" id="errorUsername" hidden>
+        Enter a username.
+    </div>
+
+    <div class="form-group">
+        <label for="exampleInputPassword1">Email address</label>
+        {{ form_widget(form.email,{'attr': {'placeholder':'email','class':'form-control'}}) }}
+        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+
+    <div  class="alert alert-danger" role="alert" id="errorEmail" hidden>
+        This should be a valid email.
+    </div>
+
+
+    <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        {{ form_widget(form.password,{'attr': {'placeholder':'password','class':'form-control'}}) }}
+    </div>
+
+    <div class="alert alert-danger" role="alert" id="errorPass" hidden>
+        password must be < 7 and contains special characters.
+    </div>
+
+
+    <div class="form-group">
+        <label for="exampleInputPassword1">Confirm password</label>
+        {{ form_widget(form.confirm_password,{'attr': {'placeholder':'password','class':'form-control'}}) }}
+    </div>
+
+    <div class="alert alert-danger" role="alert" id="errorConfPass" hidden>
+        passwords must be identical.
+    </div>
+
+
+    <button type="submit" class="btn btn-primary" id="signUp">Submit</button>
+    {{ form_end(form) }}
+{% endblock %}
+{% block js %}
+    <script src="{{ asset('BackOffice/js/UserValidation.js') }}"></script>
+{% endblock %}

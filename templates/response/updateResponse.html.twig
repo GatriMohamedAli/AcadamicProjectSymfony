@@ -1,0 +1,22 @@
+{% extends 'BackOffice/baseAdmin.html.twig' %}
+{% block body %}
+
+    {{ form_start(form) }}
+    <div class="form-group">
+        <label>Title</label>
+        {{ form_widget(form.reclamation,{'attr': {'placeholder':'Title.','class':'form-control'}}) }}
+
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Problem</label>
+        {{ form_widget(form.solution,{'attr': {'placeholder':'Describe your problem here.','class':'form-control'}}) }}
+    </div>
+    {% if form_errors(form.solution) %}
+        <div class="alert alert-danger" role="alert">
+            {{ form_errors(form.solution) }}
+        </div>
+    {% endif %}
+    <button type="submit" class="btn btn-primary">Submit</button>
+    {{ form_end(form) }}
+
+{% endblock %}

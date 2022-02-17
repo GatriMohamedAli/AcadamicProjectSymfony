@@ -1,0 +1,37 @@
+{% extends 'BackOffice/baseAdmin.html.twig' %}
+
+
+
+{% block body %}
+    <div>
+        <a style="float:right;" class="btn btn-primary" href="{{ path('add_reclamation') }}">Add Reclamation</a>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Problem</th>
+            <th scope="col">User</th>
+            <th scope="col">Action</th>
+            <th scope="col">Respond</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for rec in listReclamations %}
+            <tr>
+                <th scope="row">{{ rec.id }}</th>
+                <td>{{ rec.title }}</td>
+                <td>{{ rec.problem }}</td>
+                <td>{{ rec.user }}</td>
+                <td>
+                    <a class="btn btn-danger" href="{{ path('delete_reclamation',{'id':rec.id}) }}">Delete</a>
+                    <a class="btn btn-warning" href="{{ path('update_reclamation',{'id':rec.id}) }}">Modify</a>
+                </td>
+                <td><a class="btn btn-primary" href="{{ path('add_response',{'id':rec.id}) }}">Respond</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
