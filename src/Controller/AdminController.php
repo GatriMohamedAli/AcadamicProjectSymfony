@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
+
+
 class AdminController extends AbstractController
 {
     /**
@@ -22,7 +24,7 @@ class AdminController extends AbstractController
      */
     public function index(): Response
     {
-
+        $this->denyAccessUnlessGranted(['IS_FULLY_AUTHENTICATED','ROLE_ADMIN']);
         return $this->render('/BackOffice/index.html.twig');
     }
 

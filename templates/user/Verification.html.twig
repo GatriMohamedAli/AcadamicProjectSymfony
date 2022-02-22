@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://kit.fontawesome.com/ebc72dbf59.js" crossorigin="anonymous"></script>
+
+{% endblock %}
+{% block body %}
+<div class="cont">
+    <div class="forms-container">
+        <div class="signin-signup">
+            <form action="{{ path('verify') }}" method="post" class="sign-in-form">
+                <h2 class="title">Verification</h2>
+
+
+
+                    We sent you a verification code to your email, check your email please.
+
+                <div style="width: 90%;" class="alert alert-danger" role="alert" id="errorLoginUsername" hidden>
+                    Please enter a username.
+                </div>
+                <div class="input-field">
+                    <i class="fas fa-lock"></i>
+                    <input type="text" placeholder="Verification code..." name="verificationCode" id="verificationCode"/>
+                </div>
+
+                <button type="submit" value="Login" class="butt solid" id="signIn">Verify me!</button>
+
+
+            </form>
+        </div>
+        <div class="panels-container">
+            <div class="panel left-panel">
+                <div class="content">
+                    <h3>Enjoying it so far ?</h3>
+                    <p>
+                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Debitis,
+                        ex ratione. Aliquid!
+                    </p>
+                </div>
+                <img src="{{ asset('image/log.svg') }}" class="image" alt="" />
+            </div>
+    </div>
+</div>
+{%  endblock %}

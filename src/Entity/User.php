@@ -37,7 +37,21 @@ class User implements UserInterface
      */
     private $password;
 
+
     private $confirm_password;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $roles;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isVerified;
+
+
+
 
     public function getId(): ?int
     {
@@ -92,10 +106,7 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getRoles()
-    {
-       return ["ROLE_ADMIN"];
-    }
+
 
     public function getSalt()
     {
@@ -111,5 +122,32 @@ class User implements UserInterface
         return $this->email;
     }
 
+    public function setRoles(string $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+
+    public function getRoles()
+    {
+        // TODO: Implement getRoles() method.
+        $arr=array();
+        array_push($arr,$this->roles);
+        return $arr;
+    }
+
+    public function getIsVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(?bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
 
 }

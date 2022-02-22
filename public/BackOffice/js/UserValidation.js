@@ -10,8 +10,6 @@ const validateUsername=(username)=>{return username.length > 0}
 
 
 
-
-
 const userName=document.getElementById("registration_form_username");
 const email=document.getElementById("registration_form_email");
 const pass=document.getElementById("registration_form_password");
@@ -28,6 +26,14 @@ let testPass=false;
 let testUsername=false;
 let password="";
 console.log(email)
+
+window.onload=(ev) => {
+if(userName.value.length!=0 && email.value.length!=0){
+    testEmail=true;
+    testUsername=true;
+}
+};
+
 userName.addEventListener("focusout", e=>{
     console.log(e.target.value.length);
     if(validateUsername(e.target.value)==false){
@@ -62,6 +68,8 @@ pass.addEventListener("focusout", e=>{
 confPass.addEventListener('keyup',e=>{
     if(validateConfPass(password,e.target.value)==false){
         errorConfPass.hidden=false;
+        signup.disabled=true;
+        signup.style.backgroundColor="red";
     }else{
         errorConfPass.hidden=true;
         if (testEmail && testPass && testUsername){
