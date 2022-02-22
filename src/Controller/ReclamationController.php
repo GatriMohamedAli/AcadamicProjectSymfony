@@ -75,7 +75,6 @@ class ReclamationController extends AbstractController
         return $this->render('reclamation/updateReclamation.html.twig',[
             'form'=>$form->createView(),
         ]);
-
-
     }
+
 }

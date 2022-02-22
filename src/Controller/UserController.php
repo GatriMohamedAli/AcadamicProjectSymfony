@@ -34,7 +34,7 @@ class UserController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $hash=$encoder->encodePassword($user,$user->getPassword());
             $user->setPassword($hash);
-            $user->setRoles("ROLE_ADMIN");
+            $user->setRoles("ROLE_USER");
             $user->setIsVerified(false);
             $manager->persist($user);
             $manager->flush();
@@ -72,6 +72,8 @@ class UserController extends AbstractController
         $roles=$this->getUser()->getRoles();
         if (in_array("ROLE_ADMIN",$roles)){
             return $this->redirectToRoute('admin');
+        }else{
+            return $this->redirectToRoute("userFront");
         }
         return $this->render('/user/test.html.twig',[
             'name'=>$roles,
