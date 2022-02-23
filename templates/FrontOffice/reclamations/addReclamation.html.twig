@@ -1,0 +1,30 @@
+{% extends 'FrontOffice/index.html.twig' %}
+{% block body %}
+    <div style="height: 70vh; width: 100%; padding: 50px">
+
+
+            {{ form_start(form) }}
+            <div class="form-group">
+                <label>Title</label>
+                {{ form_widget(form.title,{'attr': {'placeholder':'Title.','class':'form-control'}}) }}
+            </div>
+            {% if form_errors(form.title) %}
+                <div class="alert alert-danger" role="alert">
+                    {{ form_errors(form.title) }}
+                </div>
+            {% endif %}
+            <div class="form-group">
+                <label for="exampleInputPassword1">Problem</label>
+                {{ form_widget(form.problem,{'attr': {'placeholder':'Describe your problem here.','class':'form-control'}}) }}
+            </div>
+            {% if form_errors(form.problem) %}
+                <div class="alert alert-danger" role="alert">
+                    {{ form_errors(form.problem) }}
+                </div>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+            {{ form_end(form) }}
+
+
+    </div>
+{% endblock %}

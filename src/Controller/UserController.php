@@ -27,6 +27,7 @@ class UserController extends AbstractController
      */
     public function index(Request $request,UserPasswordEncoderInterface $encoder, MailerInterface $mailer): Response
     {
+
         $user=new User();
         $form=$this->createForm(RegistrationFormType::class,$user,['attr' => ['class' => 'sign-up-form']]);
         $form->handleRequest($request);
@@ -75,9 +76,6 @@ class UserController extends AbstractController
         }else{
             return $this->redirectToRoute("userFront");
         }
-        return $this->render('/user/test.html.twig',[
-            'name'=>$roles,
-        ]);
     }
 
     /**

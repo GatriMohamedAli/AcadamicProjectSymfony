@@ -21,6 +21,20 @@ class ReclamationController extends AbstractController
     public function index(ReclamationRepository $repository): Response
     {
         $listReclamations=$repository->findAll();
+
+        if (in_array("ROLE_USER",$this->getUser()->getRoles())){
+            $reclUser = [];
+            foreach ($listReclamations as $rec) {
+                $userId = $rec->getUser()->getUsername();
+                if ($userId == $this->getUser()->getUsername()) {
+                    array_push($reclUser, $rec);
+                }
+            }
+            $listReclamations=$reclUser;
+            return $this->render('FrontOffice/reclamations/listReclamation.html.twig',[
+                'listReclamations' => $listReclamations,
+            ]);
+    }
         return $this->render('reclamation/index.html.twig', [
             'listReclamations' => $listReclamations,
         ]);
@@ -41,6 +55,11 @@ class ReclamationController extends AbstractController
             $manager->persist($reclamation);
             $manager->flush();
             return $this->redirectToRoute('reclamation');
+        }
+        if (in_array("ROLE_USER",$this->getUser()->getRoles())){
+            return $this->render('FrontOffice/reclamations/addReclamation.html.twig',[
+                'form'=>$form->createView(),
+            ]);
         }
         return $this->render('reclamation/addReclamation.html.twig',[
             'form'=>$form->createView(),
@@ -71,6 +90,11 @@ class ReclamationController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $manager->flush();
             return $this->redirectToRoute('reclamation');
+        }
+        if (in_array("ROLE_USER",$this->getUser()->getRoles())){
+            return $this->render('FrontOffice/reclamations/addReclamation.html.twig',[
+                'form'=>$form->createView()
+            ]);
         }
         return $this->render('reclamation/updateReclamation.html.twig',[
             'form'=>$form->createView(),
