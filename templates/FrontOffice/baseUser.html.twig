@@ -29,6 +29,7 @@
 
     <!-- Template Stylesheet -->
     <link href="{{asset('FrontOffice/css/style.css')}}" rel="stylesheet">
+    <link href="{{asset('css/profile.css')}}" rel="stylesheet">
 </head>
 
 <body>
@@ -57,7 +58,7 @@
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Reclamation</a>
                 <div class="dropdown-menu fade-down m-0">
-                    <a href="team.html" class="dropdown-item">Add reclamation</a>
+                    <a href="{{ path('add_reclamation') }}" class="dropdown-item">Add reclamation</a>
                     <a href="{{ path('reclamation') }}" class="dropdown-item">My reclamations</a>
 
                 </div>
@@ -68,14 +69,18 @@
         {% if not app.user %}
             <a href="{{ path('login') }}" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a>
         {% else %}
-            <div style="float:right" class="nav-item dropdown bg-dark  d-none d-lg-block" style="width: 250px">
-                <div  style="float: right; width: 170px" class="d-flex">
-                    <p style="margin-top: 15px;padding-left: 50px">{{ app.user.username }}</p>
-                    <img style="height: 50px;width: 50px;border-radius: 50%" src="{{ asset('BackOffice/images/boxBG.png') }}"/>
-                    {#                    <i class="fa fa-user fa-3x" style="border-radius: 25%" aria-hidden="true"></i>#}
+            <div style="float:right" class="nav-item dropdown bg-dark  d-none d-lg-block" style="width: auto">
+                <div  style="float: right; width: auto;" class="d-flex">
+                    <p style="margin-top: 15px;margin-left: 50px">{{ app.user.username }}</p>
+                    {% if app.user.image %}
+                        <img style="height: 50px;width: 50px;border-radius: 50%;object-fit: cover; margin-left: 20px; margin-right: 5px" src="{{ asset('uploads/images/profiles/'~ app.user.image) }}"/>
+                    {% else %}
+{#                        <i style="margin-left: 20px; margin-right: 5px" class="fa fa-user fa-3x" style="border-radius: 25%" aria-hidden="true"></i>#}
+                        <img style="height: 50px;width: 50px;border-radius: 50%;object-fit: cover; margin-left: 20px; margin-right: 5px" src="https://img.icons8.com/officel/100/000000/user.png"/>
+                    {% endif %}
                 </div>
                 <div class="dropdown-menu fade-down m-0">
-                    <a href="team.html" class="dropdown-item">Profile</a>
+                    <a href="{{ path('profile') }}" class="dropdown-item">Profile</a>
                     <a href="{{ path('logout') }}" class="dropdown-item">Logout</a>
                 </div>
             </div>

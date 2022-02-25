@@ -7,6 +7,7 @@
             <th scope="col">#</th>
             <th scope="col">Username</th>
             <th scope="col">Email</th>
+            <th scope="col">Role</th>
             <th scope="col">Action</th>
 
         </tr>
@@ -15,11 +16,20 @@
         {% for user in listUsers %}
         <tr>
             <th scope="row">{{ user.id }}</th>
-            <td>{{ user.username }}</td>
+            <td><a href=" {{ path('view_Profile',{'id':user.id}) }}">{{ user.username }}</a></td>
             <td>{{ user.email }}</td>
+            <td>{% if user.roles[0]=="ROLE_ADMIN" %}
+                    Admin
+                {% else %}
+                    Simple user
+                {% endif %}
+
+            </td>
             <td>
+                {% if user.roles[0] !="ROLE_USER" %}
                 <a class="btn btn-danger" href="{{ path('admin_deleteUser',{'id':user.id}) }}">Delete</a>
                 <a class="btn btn-warning" href="{{ path('admin_updateUser',{'id':user.id}) }}">Modify</a>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

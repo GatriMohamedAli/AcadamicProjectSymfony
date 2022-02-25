@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20220221224134 extends AbstractMigration
+final class Version20220224220358 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -36,7 +36,8 @@ final class Version20220221224134 extends AbstractMigration
         $this->addSql('DROP TABLE __temp__responses_reclamation');
         $this->addSql('CREATE INDEX IDX_C4BE635F2D6BA2D9 ON responses_reclamation (reclamation_id)');
         $this->addSql('CREATE INDEX IDX_C4BE635F91560F9D ON responses_reclamation (responses_id)');
-        $this->addSql('ALTER TABLE user ADD COLUMN is_verified BOOLEAN DEFAULT NULL');
+        $this->addSql('ALTER TABLE user ADD COLUMN telephone VARCHAR(255) DEFAULT NULL');
+        $this->addSql('ALTER TABLE user ADD COLUMN address VARCHAR(255) DEFAULT NULL');
     }
 
     public function down(Schema $schema): void
@@ -58,10 +59,10 @@ final class Version20220221224134 extends AbstractMigration
         $this->addSql('DROP TABLE __temp__responses_reclamation');
         $this->addSql('CREATE INDEX IDX_C4BE635F91560F9D ON responses_reclamation (responses_id)');
         $this->addSql('CREATE INDEX IDX_C4BE635F2D6BA2D9 ON responses_reclamation (reclamation_id)');
-        $this->addSql('CREATE TEMPORARY TABLE __temp__user AS SELECT id, username, email, password, roles FROM user');
+        $this->addSql('CREATE TEMPORARY TABLE __temp__user AS SELECT id, username, email, password, roles, is_verified, image FROM user');
         $this->addSql('DROP TABLE user');
-        $this->addSql('CREATE TABLE user (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, username VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, roles VARCHAR(255) NOT NULL)');
-        $this->addSql('INSERT INTO user (id, username, email, password, roles) SELECT id, username, email, password, roles FROM __temp__user');
+        $this->addSql('CREATE TABLE user (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, username VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, roles VARCHAR(255) NOT NULL, is_verified BOOLEAN DEFAULT NULL, image VARCHAR(255) DEFAULT NULL)');
+        $this->addSql('INSERT INTO user (id, username, email, password, roles, is_verified, image) SELECT id, username, email, password, roles, is_verified, image FROM __temp__user');
         $this->addSql('DROP TABLE __temp__user');
     }
 }

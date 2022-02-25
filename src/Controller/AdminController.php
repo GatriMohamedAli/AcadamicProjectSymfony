@@ -22,7 +22,7 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin", name="admin")
      */
-    public function index(): Response
+    public function index(UserRepository $repository): Response
     {
         $this->denyAccessUnlessGranted(['IS_FULLY_AUTHENTICATED','ROLE_ADMIN']);
         return $this->render('/BackOffice/index.html.twig');
@@ -33,8 +33,15 @@ class AdminController extends AbstractController
      */
     public function listUsers(UserRepository $repository):Response{
         $listUsers=$repository->findAll();
+        $finalList=[];
+        foreach ($listUsers as $user){
+                if($user->getUsername()!=$this->getUser()->getUsername()){
+                    array_push($finalList,$user);
+                }
+            }
+
         return $this->render('BackOffice/UserManagement/listUser.html.twig',[
-            'listUsers'=>$listUsers,
+            'listUsers'=>$finalList,
         ]);
     }
 
@@ -50,6 +57,7 @@ class AdminController extends AbstractController
         if($form->isSubmitted()){
             $hash=$encoder->encodePassword($user,$user->getPassword());
             $user->setPassword($hash);
+            $user->setRoles("ROLE_ADMIN");
             $manager->persist($user);
             $manager->flush();
             return $this->redirectToRoute('admin_listUsers');

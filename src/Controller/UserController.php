@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\ProfileFormType;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use phpDocumentor\Reflection\Types\Null_;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -100,5 +102,53 @@ class UserController extends AbstractController
             }
         }
         return $this->render('/user/Verification.html.twig');
+    }
+    /**
+     * @Route("/profile",name="profile")
+     */
+    public function profile(UserRepository $repository){
+        $userInterface=$this->getUser();
+        $userInfo=$repository->findOneByUsername($userInterface->getUsername());
+        if (in_array("ROLE_ADMIN",$userInterface->getRoles())){
+            return $this->render('/BackOffice/profile.html.twig',[
+                'user'=>$userInfo
+            ]);
+        }else{
+            return $this->render('/FrontOffice/profile.html.twig',[
+                'user'=>$userInfo
+            ]);
+        }
+    }
+    /**
+     * @Route("/modifyProfile", name="modify_profile")
+     */
+    public function modifyProfile(Request $request,UserRepository $repository,EntityManagerInterface $manager){
+        $userInterface=$this->getUser();
+        $userInfo=$repository->findOneByUsername($userInterface->getUsername());
+        $form=$this->createForm(ProfileFormType::class,$userInfo);
+        $form->handleRequest($request);
+        if ($form->isSubmitted()){
+            $manager->flush();
+            $userInfo->setImageFile(null);
+            return $this->redirectToRoute('profile');
+        }
+        if (in_array("ROLE_ADMIN",$userInterface->getRoles())){
+            return $this->render('/BackOffice/modifyProfile.html.twig',[
+                'form'=>$form->createView()
+            ]);
+        }else{
+            return $this->render('/FrontOffice/modifyProfile.html.twig',[
+                'form'=>$form->createView()
+            ]);
+        }
+    }
+
+    /**
+     * @Route("/viewProfile/{id}", name="view_Profile")
+     */
+    public function showProfile(User $userInfo){
+        return $this->render('/BackOffice/profile.html.twig',[
+            'user'=>$userInfo
+        ]);
     }
 }

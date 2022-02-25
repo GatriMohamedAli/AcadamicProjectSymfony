@@ -4,20 +4,20 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
-class RegistrationFormType extends AbstractType
+class ProfileFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('username',null,array('label' => false))
-            ->add('email',null,array('label' => false))
-            ->add('password',PasswordType::class ,array('label' => false))
-            ->add('confirm_password',PasswordType::class ,array('label' => false))
+            ->add('username')
+            ->add('email')
+            ->add('imageFile', VichImageType::class)
+            ->add('Telephone')
+            ->add('address')
         ;
     }
 
@@ -25,6 +25,7 @@ class RegistrationFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'required' => false,
         ]);
     }
 }
