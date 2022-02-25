@@ -13,6 +13,7 @@
                 <th scope="col">Problem</th>
                 <th scope="col">User</th>
                 <th scope="col">Action</th>
+                <th scope="col">Response</th>
 
             </tr>
             </thead>
@@ -26,6 +27,9 @@
                     <td>
                         <a class="btn btn-danger" href="{{ path('delete_reclamation',{'id':rec.id}) }}">Delete</a>
                         <a class="btn btn-warning" href="{{ path('update_reclamation',{'id':rec.id}) }}">Modify</a>
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" href="{{ path('responseview',{'id':rec.id}) }}">View Response</a>
                     </td>
                 </tr>
             {% endfor %}

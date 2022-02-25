@@ -120,7 +120,7 @@ class UserController extends AbstractController
         }
     }
     /**
-     * @Route("/modifyProfile", name="modify_profile")
+     * @Route("/profilemodify", name="modify_profile")
      */
     public function modifyProfile(Request $request,UserRepository $repository,EntityManagerInterface $manager){
         $userInterface=$this->getUser();
@@ -144,7 +144,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/viewProfile/{id}", name="view_Profile")
+     * @Route("/profileview/{id}", name="view_Profile")
      */
     public function showProfile(User $userInfo){
         return $this->render('/BackOffice/profile.html.twig',[

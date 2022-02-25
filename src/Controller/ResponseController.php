@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Reclamation;
 use App\Entity\Responses;
 use App\Form\ResponseFormType;
 use App\Repository\ReclamationRepository;
@@ -25,7 +26,7 @@ class ResponseController extends AbstractController
     }
 
     /**
-     * @Route("/addresponse/{id}", name="add_response")
+     * @Route("responseadd/{id}", name="add_response")
      */
     public function addResponse(ReclamationRepository $repository,Request $request,int $id): Response
     {
@@ -78,7 +79,24 @@ class ResponseController extends AbstractController
         return $this->render('response/updateResponse.html.twig',[
             'form'=>$form->createView(),
         ]);
-
-
+    }
+    /**
+     * @Route("/responseUser/{id}", name="responseview")
+     */
+    public function viewResponse(ResponseRepository $repository,Reclamation $reclamation): Response
+    {
+        $listResponses=$repository->findAll();
+        $finalList=[];
+        foreach ($listResponses as $respons){
+            $listRec=$respons->getReclamation();
+            foreach($listRec->getIterator() as $item) {
+                if ($item->getId()==$reclamation->getId()){
+                    array_push($finalList,$respons);
+                }
+            }
+        }
+        return $this->render('FrontOffice/reclamations/viewResponse.html.twig', [
+            'listResponses' => $finalList,
+        ]);
     }
 }

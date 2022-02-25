@@ -1,15 +1,11 @@
-{% extends 'BackOffice/baseAdmin.html.twig' %}
-
-
-
+{% extends 'FrontOffice/index.html.twig' %}
 {% block body %}
-    <table class="table">
+    <table class="table" style="height: 80vh">
         <thead>
         <tr>
             <th scope="col">#</th>
             <th scope="col">Solution</th>
             <th scope="col">Problem</th>
-            <th scope="col">Action</th>
 
         </tr>
         </thead>
@@ -20,12 +16,8 @@
 
                 <td>{{ response.solution }}</td>
                 <td>{% for rec in response.reclamation %}
-                {{ rec.title }}
+                        {{ rec.title }}
                     {% endfor %}
-                </td>
-                <td>
-                    <a class="btn btn-danger" href="{{ path('delete_response',{'id':response.id}) }}">Delete</a>
-                    <a class="btn btn-warning" href="{{ path('update_response',{'id':response.id}) }}">Modify</a>
                 </td>
             </tr>
         {% endfor %}
