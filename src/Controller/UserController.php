@@ -30,6 +30,7 @@ class UserController extends AbstractController
     public function index(Request $request,UserPasswordEncoderInterface $encoder, MailerInterface $mailer): Response
     {
 
+
         $user=new User();
         $form=$this->createForm(RegistrationFormType::class,$user,['attr' => ['class' => 'sign-up-form']]);
         $form->handleRequest($request);
@@ -151,4 +152,5 @@ class UserController extends AbstractController
             'user'=>$userInfo
         ]);
     }
+
 }

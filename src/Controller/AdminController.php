@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use phpDocumentor\Reflection\DocBlock\Tags\Uses;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Publisher;
+use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -25,6 +28,7 @@ class AdminController extends AbstractController
     public function index(UserRepository $repository): Response
     {
         $this->denyAccessUnlessGranted(['IS_FULLY_AUTHENTICATED','ROLE_ADMIN']);
+
         return $this->render('/BackOffice/index.html.twig');
     }
 

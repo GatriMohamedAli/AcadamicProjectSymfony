@@ -55,14 +55,15 @@
             <a href="index.html" class="nav-item nav-link active">Home</a>
             <a href="about.html" class="nav-item nav-link active">About</a>
             <a href="courses.html" class="nav-item nav-link active">Courses</a>
+            {% if app.user %}
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Reclamation</a>
                 <div class="dropdown-menu fade-down m-0">
                     <a href="{{ path('add_reclamation') }}" class="dropdown-item">Add reclamation</a>
                     <a href="{{ path('reclamation') }}" class="dropdown-item">My reclamations</a>
-
                 </div>
             </div>
+            {% endif %}
             <a href="contact.html" class="nav-item nav-link active">Contact</a>
         </div>
 

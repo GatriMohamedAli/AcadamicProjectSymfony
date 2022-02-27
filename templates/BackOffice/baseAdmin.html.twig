@@ -49,50 +49,12 @@
             <ul class="navbar-nav navbar-nav-right">
                 <li class="nav-item dropdown">
                     <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" href="#" data-toggle="dropdown">
-                        <i class="icon-bell mx-0"></i>
-                        <span class="count"></span>
+                        <i id="bell" class="icon-bell mx-0"></i>
+                        <span id="count" class="count" hidden></span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
-                        <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
-                        <a class="dropdown-item preview-item">
-                            <div class="preview-thumbnail">
-                                <div class="preview-icon bg-success">
-                                    <i class="ti-info-alt mx-0"></i>
-                                </div>
-                            </div>
-                            <div class="preview-item-content">
-                                <h6 class="preview-subject font-weight-normal">Application Error</h6>
-                                <p class="font-weight-light small-text mb-0 text-muted">
-                                    Just now
-                                </p>
-                            </div>
-                        </a>
-                        <a class="dropdown-item preview-item">
-                            <div class="preview-thumbnail">
-                                <div class="preview-icon bg-warning">
-                                    <i class="ti-settings mx-0"></i>
-                                </div>
-                            </div>
-                            <div class="preview-item-content">
-                                <h6 class="preview-subject font-weight-normal">Settings</h6>
-                                <p class="font-weight-light small-text mb-0 text-muted">
-                                    Private message
-                                </p>
-                            </div>
-                        </a>
-                        <a class="dropdown-item preview-item">
-                            <div class="preview-thumbnail">
-                                <div class="preview-icon bg-info">
-                                    <i class="ti-user mx-0"></i>
-                                </div>
-                            </div>
-                            <div class="preview-item-content">
-                                <h6 class="preview-subject font-weight-normal">New user registration</h6>
-                                <p class="font-weight-light small-text mb-0 text-muted">
-                                    2 days ago
-                                </p>
-                            </div>
-                        </a>
+                    <div id="parentTest" class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" aria-labelledby="notificationDropdown">
+                        <p id="child" class="mb-0 font-weight-normal float-left dropdown-header" style="width: 100%">Notifications</p>
+
                     </div>
                 </li>
                 <li class="nav-item nav-profile dropdown">
@@ -404,9 +366,12 @@
                 {% endblock %}
             </div>
         </div>
+
     </div>
 
+
 </div>
+
 
     <script src="{{asset('BackOffice/vendors/js/vendor.bundle.base.js')}}"></script>
     <!-- endinject -->
@@ -427,7 +392,49 @@
     <!-- Custom js for this page-->
     <script src="{{asset('BackOffice/js/dashboard.js')}}"></script>
     <script src="{{asset('BackOffice/js/Chart.roundedBarCharts.js')}}"></script>
+<script>
 
+    const url = new URL('https://localhost/.well-known/mercure');
+    url.searchParams.append('topic', 'https://example.com/books/{id}');
+    url.searchParams.append('topic', 'https://example.com/users/dunglas');
+    // The URL class is a convenient way to generate URLs such as https://localhost/.well-known/mercure?topic=https://example.com/books/{id}&topic=https://example.com/users/dunglas
+
+    const eventSource = new EventSource(url);
+    const count= document.getElementById('count');
+    // The callback will be called every time an update is published
+    eventSource.onmessage = e =>{
+        console.log(e.data); // do something with the payload
+
+        console.log(count)
+        count.hidden=false;
+        document.getElementById("nothing").remove()
+        document.getElementById('child').insertAdjacentHTML("afterend",'<a class="dropdown-item preview-item">'
+            +'<div class="preview-thumbnail">'
+            +'<div class="preview-icon bg-warning">'
+            +'<i class="ti-comment mx-0"></i>'
+            +'</div>'
+            +'</div>'
+            +'<div class="preview-item-content">'
+            +'<h6 class="preview-subject font-weight-normal">Complains</h6>'
+            +'<p class="font-weight-light small-text mb-0 text-muted">'
+            +   'New complain received'
+            +'</p>'
+            +'</div>'
+            +'</a>')
+    }
+    console.log("CHILD ",document.getElementById("child").childElementCount)
+    document.getElementById("bell").addEventListener('click', ev => {
+        console.log(document.getElementById("parentTest").childElementCount)
+        if (document.getElementById("parentTest").childElementCount==1){
+            document.getElementById('child').insertAdjacentHTML("afterend",'<p id="nothing" class="mb-0 font-weight-normal float-left dropdown-header">Nothing new</p>');
+        }
+        if (count.hidden===false){
+            count.hidden=true;
+        }
+    })
+
+</script>
 {% block js %}
+
 {% endblock %}
 </body>
