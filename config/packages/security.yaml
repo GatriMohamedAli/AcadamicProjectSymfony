@@ -17,6 +17,8 @@ security:
         main:
             anonymous: lazy
             provider: in_database
+#            json_login:
+#                check_path: /loginJson
             form_login:
                 login_path: check_login
                 check_path: check_login

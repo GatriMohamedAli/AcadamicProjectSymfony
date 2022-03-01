@@ -402,36 +402,111 @@
     const eventSource = new EventSource(url);
     const count= document.getElementById('count');
     // The callback will be called every time an update is published
-    eventSource.onmessage = e =>{
-        console.log(e.data); // do something with the payload
 
-        console.log(count)
+    const beginjson='{'
+        +'"reclamation": [';
+    const endjson=']'
+        +'}';
+
+    let index=0;
+    eventSource.onmessage = e =>{
         count.hidden=false;
-        document.getElementById("nothing").remove()
-        document.getElementById('child').insertAdjacentHTML("afterend",'<a class="dropdown-item preview-item">'
-            +'<div class="preview-thumbnail">'
-            +'<div class="preview-icon bg-warning">'
-            +'<i class="ti-comment mx-0"></i>'
-            +'</div>'
-            +'</div>'
-            +'<div class="preview-item-content">'
-            +'<h6 class="preview-subject font-weight-normal">Complains</h6>'
-            +'<p class="font-weight-light small-text mb-0 text-muted">'
-            +   'New complain received'
-            +'</p>'
-            +'</div>'
-            +'</a>')
+        if (document.getElementById("nothing")){
+            document.getElementById("nothing").remove()
+        }
+        const object=JSON.parse(e.data);
+        index+=1;
+        {#let url='{{ path("view_single_reclamtion",{"id":"reclId"}) }}'#}
+        {#url=url.replace("reclId",object.reclId);#}
+        {#document.getElementById('child').insertAdjacentHTML("afterend",'<a href="'+url+'" class="dropdown-item preview-item">'#}
+        {#    +'<div class="preview-thumbnail">'#}
+        {#    +'<div class="preview-icon bg-warning">'#}
+        {#    +'<i class="ti-comment mx-0"></i>'#}
+        {#    +'</div>'#}
+        {#    +'</div>'#}
+        {#    +'<div class="preview-item-content">'#}
+        {#    +'<h6 class="preview-subject font-weight-normal">Complains</h6>'#}
+        {#    +'<p class="font-weight-light small-text mb-0 text-muted">'#}
+        {#    +   'New complain received from '+object.userId#}
+        {#    +'</p>'#}
+        {#    +'</div>'#}
+        {#    +'</a>')#}
+
+        // const midjson='{"userId": "'+object.userId+'",'
+        //     +'"reclId": "'+object.reclId+'"}'
+        let midjson=""
+        console.log(window.localStorage.getItem("notRec")!=null);
+        if (window.localStorage.getItem("notRec")!=null) {
+            test = JSON.parse(window.localStorage.getItem("notRec"));
+            test.reclamation.forEach(function (obj) {
+                midjson += ',{"userId": "' + obj.userId + '",'
+                    + '"reclId": "' + obj.reclId + '"}'
+
+            })
+        }
+        midjson+=',{"userId": "'+object.userId+'",'
+               +'"reclId": "'+object.reclId+'"}'
+        midjson = midjson.replace(",", "");
+        let finaljson=beginjson+midjson+endjson;
+        // console.log(finaljson);
+        // console.log(JSON.parse(finaljson))
+    //     let json='{'
+    //     +'"reclamation": [{'
+    //         +'"userId": "'+object.userId+'",'
+    //         +'"reclId": "'+object.reclId+'"'
+    //     +'}]'
+    // +'}';
+        console.log("final JSON ",finaljson)
+        window.localStorage.setItem("notRec",finaljson);
+        displayNotifications();
+        // const localJson=JSON.parse(window.localStorage.getItem("notRec"));
+        // console.log(localJson.reclamation[0].userId);
     }
-    console.log("CHILD ",document.getElementById("child").childElementCount)
     document.getElementById("bell").addEventListener('click', ev => {
-        console.log(document.getElementById("parentTest").childElementCount)
-        if (document.getElementById("parentTest").childElementCount==1){
+
+         if (document.getElementById("parentTest").childElementCount==1){
             document.getElementById('child').insertAdjacentHTML("afterend",'<p id="nothing" class="mb-0 font-weight-normal float-left dropdown-header">Nothing new</p>');
         }
         if (count.hidden===false){
             count.hidden=true;
         }
     })
+
+
+
+    let midjson="";
+    test=JSON.parse(window.localStorage.getItem("notRec"));
+    test.reclamation.forEach(function (obj) {
+        midjson +=',{"userId": "'+obj.userId+'",'
+            +'"reclId": "'+obj.reclId+'"}'
+    })
+    midjson=midjson.replace(",","");
+    let finaljson=beginjson+midjson+endjson;
+    console.log(finaljson);
+window.addEventListener('load',ev => displayNotifications())
+
+ const displayNotifications = () => {
+     notLocal=JSON.parse(window.localStorage.getItem("notRec"));
+     if(notLocal!=null){
+         notLocal.reclamation.forEach(function (obj) {
+             let url='{{ path("view_single_reclamtion",{"id":"reclId"}) }}'
+             url=url.replace("reclId",obj.reclId);
+             document.getElementById('child').insertAdjacentHTML("afterend",'<a href="'+url+'" class="dropdown-item preview-item">'
+                 +'<div class="preview-thumbnail">'
+                 +'<div class="preview-icon bg-warning">'
+                 +'<i class="ti-comment mx-0"></i>'
+                 +'</div>'
+                 +'</div>'
+                 +'<div class="preview-item-content">'
+                 +'<h6 class="preview-subject font-weight-normal">Complains</h6>'
+                 +'<p class="font-weight-light small-text mb-0 text-muted">'
+                 +   'New complain received from '+obj.userId
+                 +'</p>'
+                 +'</div>'
+                 +'</a>')
+         })
+     }
+ }
 
 </script>
 {% block js %}

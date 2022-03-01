@@ -21,19 +21,34 @@
         </tr>
         </thead>
         <tbody>
-        {% for rec in listReclamations %}
+        {{ listReclamations|length }}
+        {% if (listReclamations|length > 10) %}
+            {% for rec in listReclamations %}
+                <tr>
+                    <th scope="row">{{ rec.id }}</th>
+                    <td>{{ rec.title }}</td>
+                    <td>{{ rec.problem }}</td>
+                    <td>{{ rec.user }}</td>
+                    <td>
+                        <a class="btn btn-danger" href="{{ path('delete_reclamation',{'id':rec.id}) }}">Delete</a>
+                        <a class="btn btn-warning" href="{{ path('update_reclamation',{'id':rec.id}) }}">Modify</a>
+                    </td>
+                    <td><a class="btn btn-primary" href="{{ path('add_response',{'id':rec.id}) }}">Respond</a></td>
+                </tr>
+            {% endfor %}
+        {% else %}
             <tr>
-                <th scope="row">{{ rec.id }}</th>
-                <td>{{ rec.title }}</td>
-                <td>{{ rec.problem }}</td>
-                <td>{{ rec.user }}</td>
+                <th scope="row">{{ listReclamations.id }}</th>
+                <td>{{ listReclamations.title }}</td>
+                <td>{{ listReclamations.problem }}</td>
+                <td>{{ listReclamations.user }}</td>
                 <td>
-                    <a class="btn btn-danger" href="{{ path('delete_reclamation',{'id':rec.id}) }}">Delete</a>
-                    <a class="btn btn-warning" href="{{ path('update_reclamation',{'id':rec.id}) }}">Modify</a>
+                    <a class="btn btn-danger" href="{{ path('delete_reclamation',{'id':listReclamations.id}) }}">Delete</a>
+                    <a class="btn btn-warning" href="{{ path('update_reclamation',{'id':listReclamations.id}) }}">Modify</a>
                 </td>
-                <td><a class="btn btn-primary" href="{{ path('add_response',{'id':rec.id}) }}">Respond</a></td>
+                <td><a class="btn btn-primary" href="{{ path('add_response',{'id':listReclamations.id}) }}">Respond</a></td>
             </tr>
-        {% endfor %}
+        {% endif %}
         </tbody>
     </table>
 {% endblock %}

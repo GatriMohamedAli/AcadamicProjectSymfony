@@ -11,6 +11,8 @@ use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -44,7 +46,7 @@ class ReclamationController extends AbstractController
     /**
      * @Route("reclamationAdd",name="add_reclamation")
      */
-    public function addReclamation(UserRepository $repository,Request $request,UserInterface $user):Response
+    public function addReclamation(UserRepository $repository,Request $request,UserInterface $user, HubInterface $hub):Response
     {
         $reclamation=new Reclamation();
         $form=$this->createForm(ReclamationFormType::class,$reclamation);
@@ -55,6 +57,10 @@ class ReclamationController extends AbstractController
             $reclamation->setUser($user);
             $manager->persist($reclamation);
             $manager->flush();
+            $update = new Update("https://example.com/users/dunglas", '{'
+                .'"userId" : "'.$user->getUsername().'",'
+                .'"reclId" :"'.$reclamation->getId().'"}');
+            $hub->publish($update);
             return $this->redirectToRoute('reclamation');
         }
         if (in_array("ROLE_USER",$this->getUser()->getRoles())){
@@ -99,6 +105,16 @@ class ReclamationController extends AbstractController
         }
         return $this->render('reclamation/updateReclamation.html.twig',[
             'form'=>$form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/viewReclamation/{id}", name="view_single_reclamtion")
+     */
+    public function viewSingleReclamation(int $id,ReclamationRepository $repository){
+        $reclamation=$repository->find($id);
+        return $this->render('reclamation/viewSingleReclamation.html.twig', [
+            'reclamation' => $reclamation,
         ]);
     }
 

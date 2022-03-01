@@ -29,8 +29,6 @@ class UserController extends AbstractController
      */
     public function index(Request $request,UserPasswordEncoderInterface $encoder, MailerInterface $mailer): Response
     {
-
-
         $user=new User();
         $form=$this->createForm(RegistrationFormType::class,$user,['attr' => ['class' => 'sign-up-form']]);
         $form->handleRequest($request);
@@ -72,7 +70,11 @@ class UserController extends AbstractController
     /**
      * @route("/test", name="test")
      */
-    public function test(){
+    public function test(Request $request){
+        $request->get("Agent");
+        if (strcmp($request->get("Agent"),"mobile")==0){
+            return new Response(json_encode("Logged in"));
+        }
         $roles=$this->getUser()->getRoles();
         if (in_array("ROLE_ADMIN",$roles)){
             return $this->redirectToRoute('admin');
@@ -152,5 +154,19 @@ class UserController extends AbstractController
             'user'=>$userInfo
         ]);
     }
+//    /**
+//     * @Route("/loginJson", name="login", methods={"POST"})
+//     */
+//    public function loginJson(Request $request): Response
+//    {
+//        $user = $this->getUser();
+//
+//        return $this->json([
+//            'id' => $user->getId(),
+//            'username' => $user->getUsername(),
+//            'email' => $user->getEmail(),
+//            'roles' => $user->getRoles(),
+//        ]);
+//    }
 
 }
