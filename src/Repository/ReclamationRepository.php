@@ -19,22 +19,21 @@ class ReclamationRepository extends ServiceEntityRepository
         parent::__construct($registry, Reclamation::class);
     }
 
-    // /**
-    //  * @return Reclamation[] Returns an array of Reclamation objects
-    //  */
-    /*
+     /**
+      * @return Reclamation[] Returns an array of Reclamation objects
+      */
+
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+        $query= $this->createQueryBuilder('r');
+           $query->andWhere(
+               $query->expr()->like('r.title',  ':val')
+           )
+            ->setParameter('val', '%'.$value.'%')
         ;
+           return $query->getQuery()->getResult();
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?Reclamation

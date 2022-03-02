@@ -21,6 +21,9 @@
     <!-- endinject -->
     <link rel="shortcut icon" href="{{asset('BackOffice/images/favicon.png')}}" />
     <link href="{{asset('css/profile.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {% block stylesheet %}
+    {% endblock %}
 </head>
 <body>
 <div class="container-scroller">
@@ -42,7 +45,7 @@
                   <i class="icon-search"></i>
                 </span>
                         </div>
-                        <input type="text" class="form-control" id="navbar-search-input" placeholder="Search now" aria-label="search" aria-describedby="search">
+                        <input type="text" style="width: 300px" class="form-control" id="navbar-search-input" placeholder="Search now by phone, email or username." aria-label="search" aria-describedby="search">
                     </div>
                 </li>
             </ul>

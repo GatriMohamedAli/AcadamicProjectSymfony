@@ -1,39 +1,98 @@
 {% extends 'BackOffice/baseAdmin.html.twig' %}
 
 {% block body %}
-    <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Username</th>
-            <th scope="col">Email</th>
-            <th scope="col">Role</th>
-            <th scope="col">Action</th>
+{#    <table class="table">#}
+{#        <thead>#}
+{#        <tr>#}
+{#            <th scope="col">#</th>#}
+{#            <th scope="col">Username</th>#}
+{#            <th scope="col">Email</th>#}
+{#            <th scope="col">Role</th>#}
+{#            <th scope="col">Action</th>#}
 
-        </tr>
-        </thead>
-        <tbody>
-        {% for user in listUsers %}
-        <tr>
-            <th scope="row">{{ user.id }}</th>
-            <td><a href=" {{ path('view_Profile',{'id':user.id}) }}">{{ user.username }}</a></td>
-            <td>{{ user.email }}</td>
-            <td>{% if user.roles[0]=="ROLE_ADMIN" %}
-                    Admin
-                {% else %}
-                    Simple user
-                {% endif %}
+{#        </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#        {% for user in listUsers %}#}
+{#        <tr>#}
+{#            <th scope="row">{{ user.id }}</th>#}
+{#            <td><a href=" {{ path('view_Profile',{'id':user.id}) }}">{{ user.username }}</a></td>#}
+{#            <td>{{ user.email }}</td>#}
+{#            <td>{% if user.roles[0]=="ROLE_ADMIN" %}#}
+{#                    Admin#}
+{#                {% else %}#}
+{#                    Simple user#}
+{#                {% endif %}#}
 
-            </td>
-            <td>
-                {% if user.roles[0] !="ROLE_USER" %}
-                <a class="btn btn-danger" href="{{ path('admin_deleteUser',{'id':user.id}) }}">Delete</a>
-                <a class="btn btn-warning" href="{{ path('admin_updateUser',{'id':user.id}) }}">Modify</a>
-                {% endif %}
-            </td>
-        </tr>
+{#            </td>#}
+{#            <td>#}
+{#                {% if user.roles[0] !="ROLE_USER" %}#}
+{#                <a class="btn btn-danger" href="{{ path('admin_deleteUser',{'id':user.id}) }}">Delete</a>#}
+{#                <a class="btn btn-warning" href="{{ path('admin_updateUser',{'id':user.id}) }}">Modify</a>#}
+{#                {% endif %}#}
+{#            </td>#}
+{#        </tr>#}
+            <div class="d-flex flex-wrap justify-content-around" >
+                {% for user in listUsers %}
+                <div id={{ user.id}} class="card" style="width: 18rem;margin-top: 20px">
+                    <img class="card-img-top rounded-circle mx-auto d-block" style="height: 120px;width: 120px;margin: 5px; border: 2px solid #0b7dfd; object-fit: cover" src="{{ asset('uploads/images/profiles/'~user.image) }}" alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ user.username }}</h5>
+                        <div class="card-body">
+                            <p class="card-text">Email : {{ user.email }}</p>
+                            <p class="card-text">Roles :{% if user.roles[0]=="ROLE_ADMIN" %}#}
+                                                            Admin
+                                                        {% else %}
+                                                            Simple user
+                                                        {% endif %}</p>
+
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            {% if user.roles[0] !="ROLE_USER" %}#}
+                            <a href="{{ path('admin_updateUser',{'id':user.id}) }}" class="btn btn-primary"><i class="fa fa-pencil"></i> </a>
+                            <a href="{{ path('admin_deleteUser',{'id':user.id}) }}" class="btn btn-primary"><i class="fa fa-trash"></i></a>
+                            {% endif %}
+                            <a href="{{ path('view_Profile',{'id':user.id}) }}" class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                        </div>
+                    </div>
+                </div>
+
         {% endfor %}
-        </tbody>
-    </table>
+            </div>
+{#        </tbody>#}
+{#    </table>#}
+{% endblock %}
+{% block js %}
+<script>
+    console.log(document.getElementById("navbar-search-input"));
 
+    const searchUser=(crit)=>{
+            $.ajax({
+                type:'POST',
+                url:'http://localhost:8000/searchUser',
+                data:{
+                    'crit': crit
+                },
+                success:(res)=>{
+                    console.log(res[0]);
+                    arrayOfFiltredUserIds=[]
+                    res[1].forEach(el => {
+                        arrayOfFiltredUserIds.push(el.id)
+                    })
+                    res[0].forEach(user=>{
+                        if (arrayOfFiltredUserIds.indexOf(user.id)!=-1){
+                            document.getElementById(user.id).removeAttribute("hidden");
+                        }else{
+                            document.getElementById(user.id).setAttribute("hidden",true);
+                        }
+                    })
+                },
+                error:(err)=>{console.log(err)}
+            })
+    }
+    document.getElementById("navbar-search-input").addEventListener('keyup', ev => {
+        searchUser(ev.target.value);
+    })
+
+</script>
 {% endblock %}

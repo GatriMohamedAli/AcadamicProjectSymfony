@@ -47,4 +47,21 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findBySomething($value){
+        $query=$this->createQueryBuilder('u');
+        $orStatement=$query->expr()->orX();
+        $orStatement->add(
+            $query->expr()->like('LOWER(u.username)',':val')
+        );
+        $orStatement->add(
+            $query->expr()->like('LOWER(u.email)',':val')
+        );
+        $orStatement->add(
+            $query->expr()->like('LOWER(u.Telephone)',':val')
+        );
+        $query->andWhere($orStatement);
+        $query->setParameter('val','%'.strtoupper($value).'%');
+        return $query->getQuery()->getResult();
+    }
+
 }

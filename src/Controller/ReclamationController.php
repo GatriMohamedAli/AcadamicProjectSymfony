@@ -8,6 +8,8 @@ use App\Form\ReclamationFormType;
 use App\Repository\ReclamationRepository;
 use App\Repository\ResponseRepository;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +23,7 @@ class ReclamationController extends AbstractController
     /**
      * @Route("/reclamation", name="reclamation")
      */
-    public function index(ReclamationRepository $repository): Response
+    public function index(ReclamationRepository $repository, PaginatorInterface $paginator, Request $request): Response
     {
         $listReclamations=$repository->findAll();
 
@@ -33,11 +35,16 @@ class ReclamationController extends AbstractController
                     array_push($reclUser, $rec);
                 }
             }
-            $listReclamations=$reclUser;
+            //$listReclamations=$reclUser;
+            $listReclamations=$paginator->paginate($reclUser,$request->query->getInt('page',3),6);
             return $this->render('FrontOffice/reclamations/listReclamation.html.twig',[
                 'listReclamations' => $listReclamations,
             ]);
     }
+
+        $listAd=$listReclamations;
+        //dd($listAd);
+        $listReclamations=$paginator->paginate($listAd,$request->query->getInt('page',3),6);
         return $this->render('reclamation/index.html.twig', [
             'listReclamations' => $listReclamations,
         ]);
@@ -116,6 +123,17 @@ class ReclamationController extends AbstractController
         return $this->render('reclamation/viewSingleReclamation.html.twig', [
             'reclamation' => $reclamation,
         ]);
+    }
+
+    /**
+     * @Route ("/search", name="search")
+     */
+    public function search(Request $request,ReclamationRepository $repository)
+    {
+//        dd(strpos("test test "," "));
+        dd(substr("test test",0,strpos("test test"," ")));
+        $listReclamation=$repository->findByExampleField($request->get("test"));
+        return $this->json($listReclamation);
     }
 
 }

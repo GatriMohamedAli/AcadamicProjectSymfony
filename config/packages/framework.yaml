@@ -15,7 +15,9 @@ framework:
     #fragments: true
     php_errors:
         log: true
-
+    form:
+        csrf_protection:
+            enabled: false
     http_client:
         default_options:
             verify_peer: false

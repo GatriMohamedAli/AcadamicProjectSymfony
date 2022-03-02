@@ -6,6 +6,7 @@
 {% block body %}
     <div>
         <a style="float:right;" class="btn btn-primary" href="{{ path('add_reclamation') }}">Add Reclamation</a>
+{#            {{ knp_pagination_render(listReclamations) }}#}
     </div>
 {#    {{ app.request.attributes.get('_route') }}#}
     <table class="table">
@@ -21,8 +22,7 @@
         </tr>
         </thead>
         <tbody>
-        {{ listReclamations|length }}
-        {% if (listReclamations|length > 10) %}
+{#        {% if (listReclamations|length > 10) %}#}
             {% for rec in listReclamations %}
                 <tr>
                     <th scope="row">{{ rec.id }}</th>
@@ -36,19 +36,20 @@
                     <td><a class="btn btn-primary" href="{{ path('add_response',{'id':rec.id}) }}">Respond</a></td>
                 </tr>
             {% endfor %}
-        {% else %}
-            <tr>
-                <th scope="row">{{ listReclamations.id }}</th>
-                <td>{{ listReclamations.title }}</td>
-                <td>{{ listReclamations.problem }}</td>
-                <td>{{ listReclamations.user }}</td>
-                <td>
-                    <a class="btn btn-danger" href="{{ path('delete_reclamation',{'id':listReclamations.id}) }}">Delete</a>
-                    <a class="btn btn-warning" href="{{ path('update_reclamation',{'id':listReclamations.id}) }}">Modify</a>
-                </td>
-                <td><a class="btn btn-primary" href="{{ path('add_response',{'id':listReclamations.id}) }}">Respond</a></td>
-            </tr>
-        {% endif %}
+{#        {% else %}#}
+{#            <tr>#}
+{#                <th scope="row">{{ listReclamations.id }}</th>#}
+{#                <td>{{ listReclamations.title }}</td>#}
+{#                <td>{{ listReclamations.problem }}</td>#}
+{#                <td>{{ listReclamations.user }}</td>#}
+{#                <td>#}
+{#                    <a class="btn btn-danger" href="{{ path('delete_reclamation',{'id':listReclamations.id}) }}">Delete</a>#}
+{#                    <a class="btn btn-warning" href="{{ path('update_reclamation',{'id':listReclamations.id}) }}">Modify</a>#}
+{#                </td>#}
+{#                <td><a class="btn btn-primary" href="{{ path('add_response',{'id':listReclamations.id}) }}">Respond</a></td>#}
+{#            </tr>#}
+{#        {% endif %}#}
         </tbody>
     </table>
+    {{ knp_pagination_render(listReclamations) }}
 {% endblock %}

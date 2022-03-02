@@ -154,19 +154,76 @@ class UserController extends AbstractController
             'user'=>$userInfo
         ]);
     }
-//    /**
-//     * @Route("/loginJson", name="login", methods={"POST"})
-//     */
-//    public function loginJson(Request $request): Response
-//    {
-//        $user = $this->getUser();
-//
-//        return $this->json([
-//            'id' => $user->getId(),
-//            'username' => $user->getUsername(),
-//            'email' => $user->getEmail(),
-//            'roles' => $user->getRoles(),
-//        ]);
-//    }
+    /**
+     * @Route("/loginJson", name="loginJson", methods={"POST"})
+     */
+    public function loginJson(Request $request): Response
+    {
+        $user = $this->getUser();
 
+        return $this->json([
+            'id' => $user->getId(),
+            'username' => $user->getUsername(),
+            'email' => $user->getEmail(),
+            'roles' => $user->getRoles(),
+        ]);
+    }
+
+    /**
+     * @Route("/searchUser" , name="search_user")
+     */
+    public function search(Request $request,UserRepository $userRepository){
+        $allusers=$userRepository->findAll();
+        $finalList=[];
+        foreach ($allusers as $user){
+            if($user->getUsername()!=$this->getUser()->getUsername()){
+                array_push($finalList,$user);
+            }
+        }
+        $crit=$request->get('crit');
+        $filtredusers=$userRepository->findBySomething($crit);
+//        array_push($finalList,$filtredusers);
+        $result=array(
+            $finalList,$filtredusers
+        );
+        return $this->json($result);
+    }
+
+    /**
+     * @Route("/signupJson", name="signupJson")
+     */
+    public function signupJson(Request $request,UserPasswordEncoderInterface $encoder, MailerInterface $mailer): Response
+    {
+        $user=new User();
+        $form=$this->createForm(RegistrationFormType::class,$user,['attr' => ['class' => 'sign-up-form']]);
+        $data = json_decode($request->getContent(), true);
+        $form->submit($data);
+        $manager=$this->getDoctrine()->getManager();
+        if($form->isValid()){
+            $hash=$encoder->encodePassword($user,$user->getPassword());
+            $user->setPassword($hash);
+            $user->setRoles("ROLE_USER");
+            $user->setIsVerified(false);
+            $manager->persist($user);
+            $manager->flush();
+            $code=md5(uniqid(),false);
+            $request->getSession()->set("code",$code);
+            $request->getSession()->set("userId",$user->getId());
+            $mail=(new TemplatedEmail())->
+            from("mohamedali.gatri@esprit.tn")
+                ->to($user->getEmail())
+                ->subject("Account Verification")
+                ->htmlTemplate('EmailTemplate.html.twig')
+                ->context([
+                    'username'=>$user->getUsername(),
+                    'code' => $code,
+                ]);
+            $mailer->send($mail);
+
+            return $this->json($user);
+        }
+        return $this->render('/user/index.html.twig',[
+            'form'=>$form->createView(),
+        ]);
+    }
 }

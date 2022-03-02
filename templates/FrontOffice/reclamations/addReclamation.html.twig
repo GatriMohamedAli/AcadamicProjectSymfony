@@ -1,6 +1,9 @@
 {% extends 'FrontOffice/index.html.twig' %}
 {% block body %}
-    <div style="height: 70vh; width: 100%; padding: 50px">
+    <div class="row gutters" style="width: 100%;" >
+{#        col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12#}
+        <div class="" style="width: 70%" >
+            <div style="height: 70vh;  padding: 50px">
 
 
             {{ form_start(form) }}
@@ -24,7 +27,72 @@
             {% endif %}
             <button type="submit" class="btn btn-primary">Submit</button>
             {{ form_end(form) }}
-
+    </div>
+        </div>
+{#        col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12#}
+        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12" style="">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="card-body">
+                            <div id="madiv" >
+                                {% block content %}
+                                    <p class="mb-0 font-weight-thin text-gray">If reclamation already exists</p>
+                                    <div id="box" class="results-card not-visible">
+                                    </div>
+                                {% endblock content %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 
     </div>
+{% endblock %}
+{% block js %}
+     <script>
+         resultsBox=document.getElementById("box");
+         const search= (crit)=>{
+             $.ajax({
+                 type:'POST',
+                 url:'http://localhost:8000/search',
+                 data:{
+                     'test':crit
+                    },
+             success:(res)=>{
+                     var i=0;
+                     resultsBox.innerHTML="";
+                     res.forEach( (obj) => {
+                         i++;
+
+                         resultsBox.innerHTML += '<div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">'
+                             + '<div class="card-header">Réclamation Num: ' + i + '</div>'
+                             + '<div class="card-body">'
+                             + '<h5 class="card-title">' + obj.title + '</h5>'
+                             + '<p class="card-text">' + obj.problem + '.</p>'
+                             + '</div>'
+                             + '<div class="card-footer">'
+                             //+'<a type="button" class="btn btn-secondary btn-sm" style="float: right;"href="'+ch+'" class="item">Visualiser</a>'
+                             + '</div>'
+                             + '</div>'
+             })},
+             error:(err)=>{console.log(err)}
+             })
+         }
+
+         document.getElementById('reclamation_form_title').addEventListener('keyup',ev => {
+             if (ev.target.value.length>0){
+                 search(ev.target.value);
+             }else{
+                 resultsBox.innerHTML="";
+             }
+
+         })
+
+
+
+     </script>
 {% endblock %}
