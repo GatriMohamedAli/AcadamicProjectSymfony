@@ -36,7 +36,8 @@ class ReclamationController extends AbstractController
                 }
             }
             //$listReclamations=$reclUser;
-            $listReclamations=$paginator->paginate($reclUser,$request->query->getInt('page',3),6);
+
+            $listReclamations=$paginator->paginate($reclUser,$request->query->getInt('page',1),6);
             return $this->render('FrontOffice/reclamations/listReclamation.html.twig',[
                 'listReclamations' => $listReclamations,
             ]);
@@ -64,7 +65,7 @@ class ReclamationController extends AbstractController
             $reclamation->setUser($user);
             $manager->persist($reclamation);
             $manager->flush();
-            $update = new Update("https://example.com/users/dunglas", '{'
+            $update = new Update("https://example.com/reclamations", '{'
                 .'"userId" : "'.$user->getUsername().'",'
                 .'"reclId" :"'.$reclamation->getId().'"}');
             $hub->publish($update);
@@ -119,6 +120,7 @@ class ReclamationController extends AbstractController
      * @Route("/viewReclamation/{id}", name="view_single_reclamtion")
      */
     public function viewSingleReclamation(int $id,ReclamationRepository $repository){
+        $this->denyAccessUnlessGranted("ROLE_ADMIN");
         $reclamation=$repository->find($id);
         return $this->render('reclamation/viewSingleReclamation.html.twig', [
             'reclamation' => $reclamation,
@@ -131,8 +133,9 @@ class ReclamationController extends AbstractController
     public function search(Request $request,ReclamationRepository $repository)
     {
 //        dd(strpos("test test "," "));
-        dd(substr("test test",0,strpos("test test"," ")));
-        $listReclamation=$repository->findByExampleField($request->get("test"));
+        //dd(substr("test test",0,strpos("test test"," ")));
+        $crits=explode(" ",$request->get("test"));
+        $listReclamation=$repository->findByExampleField($crits);
         return $this->json($listReclamation);
     }
 

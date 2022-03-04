@@ -26,11 +26,18 @@ class ReclamationRepository extends ServiceEntityRepository
     public function findByExampleField($value)
     {
         $query= $this->createQueryBuilder('r');
-           $query->andWhere(
-               $query->expr()->like('r.title',  ':val')
-           )
-            ->setParameter('val', '%'.$value.'%')
-        ;
+//           $query->andWhere(
+//               $query->expr()->like('r.title',  ':val')
+//           )
+//            ->setParameter('val', '%'.$value.'%');
+
+           $andStatement=$query->expr()->andX();
+           foreach ($value as $val){
+               $andStatement->add(
+                   $query->expr()->like('r.title', $query->expr()->literal('%'.$val.'%'))
+               );
+           }
+           $query->andWhere($andStatement);
            return $query->getQuery()->getResult();
     }
 

@@ -64,6 +64,7 @@
                     },
              success:(res)=>{
                      var i=0;
+                     console.log(res);
                      resultsBox.innerHTML="";
                      res.forEach( (obj) => {
                          i++;
@@ -85,7 +86,11 @@
 
          document.getElementById('reclamation_form_title').addEventListener('keyup',ev => {
              if (ev.target.value.length>0){
-                 search(ev.target.value);
+                 setTimeout(()=>{
+                     search(ev.target.value),
+                         5000
+                 })
+                 //search(ev.target.value);
              }else{
                  resultsBox.innerHTML="";
              }

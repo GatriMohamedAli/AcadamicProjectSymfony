@@ -397,9 +397,32 @@
     <script src="{{asset('BackOffice/js/Chart.roundedBarCharts.js')}}"></script>
 <script>
 
+    const displayNotifications = () => {
+        notLocal=JSON.parse(window.localStorage.getItem("notRec"));
+        if(notLocal!=null){
+            notLocal.reclamation.forEach(function (obj) {
+                let url='{{ path("view_single_reclamtion",{"id":"reclId"}) }}'
+                url=url.replace("reclId",obj.reclId);
+                document.getElementById('child').insertAdjacentHTML("afterend",'<a href="'+url+'" class="dropdown-item preview-item">'
+                    +'<div class="preview-thumbnail">'
+                    +'<div class="preview-icon bg-warning">'
+                    +'<i class="ti-comment mx-0"></i>'
+                    +'</div>'
+                    +'</div>'
+                    +'<div class="preview-item-content">'
+                    +'<h6 class="preview-subject font-weight-normal">Complains</h6>'
+                    +'<p class="font-weight-light small-text mb-0 text-muted">'
+                    +   'New complain received from '+obj.userId
+                    +'</p>'
+                    +'</div>'
+                    +'</a>')
+            })
+        }
+    }
+
     const url = new URL('https://localhost/.well-known/mercure');
     url.searchParams.append('topic', 'https://example.com/books/{id}');
-    url.searchParams.append('topic', 'https://example.com/users/dunglas');
+    url.searchParams.append('topic', 'https://example.com/reclamations');
     // The URL class is a convenient way to generate URLs such as https://localhost/.well-known/mercure?topic=https://example.com/books/{id}&topic=https://example.com/users/dunglas
 
     const eventSource = new EventSource(url);
@@ -410,7 +433,6 @@
         +'"reclamation": [';
     const endjson=']'
         +'}';
-
     let index=0;
     eventSource.onmessage = e =>{
         count.hidden=false;
@@ -438,6 +460,7 @@
         // const midjson='{"userId": "'+object.userId+'",'
         //     +'"reclId": "'+object.reclId+'"}'
         let midjson=""
+
         console.log(window.localStorage.getItem("notRec")!=null);
         if (window.localStorage.getItem("notRec")!=null) {
             test = JSON.parse(window.localStorage.getItem("notRec"));
@@ -477,39 +500,9 @@
 
 
 
-    let midjson="";
-    test=JSON.parse(window.localStorage.getItem("notRec"));
-    test.reclamation.forEach(function (obj) {
-        midjson +=',{"userId": "'+obj.userId+'",'
-            +'"reclId": "'+obj.reclId+'"}'
-    })
-    midjson=midjson.replace(",","");
-    let finaljson=beginjson+midjson+endjson;
-    console.log(finaljson);
 window.addEventListener('load',ev => displayNotifications())
 
- const displayNotifications = () => {
-     notLocal=JSON.parse(window.localStorage.getItem("notRec"));
-     if(notLocal!=null){
-         notLocal.reclamation.forEach(function (obj) {
-             let url='{{ path("view_single_reclamtion",{"id":"reclId"}) }}'
-             url=url.replace("reclId",obj.reclId);
-             document.getElementById('child').insertAdjacentHTML("afterend",'<a href="'+url+'" class="dropdown-item preview-item">'
-                 +'<div class="preview-thumbnail">'
-                 +'<div class="preview-icon bg-warning">'
-                 +'<i class="ti-comment mx-0"></i>'
-                 +'</div>'
-                 +'</div>'
-                 +'<div class="preview-item-content">'
-                 +'<h6 class="preview-subject font-weight-normal">Complains</h6>'
-                 +'<p class="font-weight-light small-text mb-0 text-muted">'
-                 +   'New complain received from '+obj.userId
-                 +'</p>'
-                 +'</div>'
-                 +'</a>')
-         })
-     }
- }
+
 
 </script>
 {% block js %}
