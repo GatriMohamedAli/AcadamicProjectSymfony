@@ -37,7 +37,7 @@ class ReclamationController extends AbstractController
             }
             //$listReclamations=$reclUser;
 
-            $listReclamations=$paginator->paginate($reclUser,$request->query->getInt('page',1),6);
+            $listReclamations=$paginator->paginate($reclUser,$request->query->getInt('page',1),2);
             return $this->render('FrontOffice/reclamations/listReclamation.html.twig',[
                 'listReclamations' => $listReclamations,
             ]);

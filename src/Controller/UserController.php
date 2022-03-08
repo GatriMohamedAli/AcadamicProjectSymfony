@@ -9,8 +9,11 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
+use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
+use KnpU\OAuth2ClientBundle\Client\Provider\GithubClient;
 use phpDocumentor\Reflection\Types\Null_;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use phpDocumentor\Reflection\DocBlock\Tags\Uses;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -225,5 +228,13 @@ class UserController extends AbstractController
         return $this->render('/user/index.html.twig',[
             'form'=>$form->createView(),
         ]);
+    }
+    /**
+     * @Route("/connect/github", name="github_connect")
+     */
+    public function connect(ClientRegistry $clientRegistry):RedirectResponse{
+        /** @var GithubClient $client */
+        $client=$clientRegistry->getClient('github');
+        return $client->redirect(['read:user','user:email']);
     }
 }

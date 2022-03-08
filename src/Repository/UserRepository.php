@@ -47,6 +47,7 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
 
+
     public function findBySomething($value){
         $query=$this->createQueryBuilder('u');
         $orStatement=$query->expr()->orX();
