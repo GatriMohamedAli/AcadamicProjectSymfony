@@ -60,7 +60,6 @@ class GithubAuthenticator extends SocialAuthenticator
     {
         /** @var GithubResourceOwner $client */
         $client=$this->clientRegistry->getClient('github')->fetchUserFromToken($credentials);
-        dd($client);
         $githubUser=$this->getEmailFromGithubApi($credentials,$client);
         if ($githubUser->getEmail() === null){
             throw new GithubException();

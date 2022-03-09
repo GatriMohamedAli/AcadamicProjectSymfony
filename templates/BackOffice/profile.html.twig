@@ -1,12 +1,13 @@
 {% extends 'BackOffice/baseAdmin.html.twig' %}
 {% block body %}
 
+
     <div class="page-content p-5" id="content">
         <div>
             <div style="position: absolute;right: 10px;top: 20px ;margin-right: 30px;">
                 <img src="" alt="" style="margin-top: -10px;height: 100px;">
             </div>
-            <h1>Profile</h1>
+            <h1>Profile {{ user.image }}</h1>
             <hr>
         </div>
         <div class="container">

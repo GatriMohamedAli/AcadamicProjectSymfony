@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
@@ -81,10 +82,11 @@ class User implements UserInterface
     private $githubId;
 
 
+    /**
+     * @param File|UploadedFile|null $image
+     */
 
-
-
-    public function setImageFile(File $image = null)
+    public function setImageFile(?File $image)
     {
         $this->imageFile = $image;
     }
