@@ -1,5 +1,4 @@
 security:
-    enable_authenticator_manager: true
     encoders:
         App\Entity\User:
             algorithm: bcrypt
@@ -28,6 +27,9 @@ security:
             logout:
                 path: logout
                 target: login
+            guard:
+                authenticators:
+                    - App\OauthProviders\GithubAuthenticator
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 

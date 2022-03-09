@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use League\OAuth2\Client\Provider\GithubResourceOwner;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -65,4 +66,37 @@ class UserRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
+    public function findOrCreateByGithubAuth(GithubResourceOwner $owner){
+        /** @var User $user */
+        $user=$this->createQueryBuilder('u')
+            ->where('u.githubId = :gitid')
+            //->orWhere('u.email = :email')
+            ->setParameters([
+               // 'email'=> $owner->getEmail(),
+                'gitid'=> $owner->getId()
+            ])
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if ($user){
+            if ($user->getGithubId()===null){
+                $user->setGithubId($owner->getId());
+                $this->getEntityManager()->flush();
+            }
+
+            return $user;
+        }
+        $user=(new User())
+            ->setGithubId($owner->getId())
+            ->setUsername($owner->getNickname())
+            ->setRoles("ROLE_USER")
+            ->setIsVerified(true)
+            ->setEmail($owner->getEmail());
+
+        $em=$this->getEntityManager();
+        $em->persist($user);
+        $em->flush();
+        return $user;
+
+    }
 }
